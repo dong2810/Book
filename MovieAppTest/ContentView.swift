@@ -9,8 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        HomeBook(movies: Movie.stubbedMovies, movie: Movie.stubbedMovie)
     }
 }
 
