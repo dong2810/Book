@@ -23,62 +23,69 @@ struct HomeBook: View {
     @ObservedObject private var popularState = MovieListState()
     
     var body: some View {
-        VStack(spacing: 15) {
-            HStack {
-                Text("Home123")
-                    .font(.largeTitle.bold())
-                
-                Text("Recommend")
-                    .fontWeight(.semibold)
-                    .padding(.leading, 15)
-                    .foregroundColor(.gray)
-                    .offset(y: 2)
-                
-                Spacer(minLength: 10)
-                Menu {
-                    Button("Toggle ") {
-                        
-                    }
-                } label: {
+        if #available(iOS 15.0, *) {
+            VStack(spacing: 15) {
+                HStack {
+                    Text("Home123")
+                        .font(.largeTitle.bold())
+                    
+                    Text("Recommend")
+                        .fontWeight(.semibold)
+                        .padding(.leading, 15)
+                        .foregroundColor(.gray)
+                        .offset(y: 2)
+                    
+                    Spacer(minLength: 10)
+                    Menu {
+                        Button("Toggle ") {
+                            
+                        }
+                    } label: {
                         Image(systemName: "ellipsis")
                             .rotationEffect(.init(degrees: -90))
                             .foregroundColor(.gray)
                     }
                 }
-            
-            tagView()
-            
-            GeometryReader {
-                let size = $0.size
                 
-                ScrollView(.vertical, showsIndicators: false) {
-                    if #available(iOS 15.0, *) {
-                        VStack(spacing: 15) {
-                            ForEach(self.movies) { movie in
-                                MovieCardView1(movie)
-                                    .onTapGesture {
-//                                        withAnimation(.spring(response: 0.6, dampingFraction: 0.7, blendDuration: 0.7))
-                                    }
+                tagView()
+                
+                GeometryReader {
+                    let size = $0.size
+                    
+                    ScrollView(.vertical, showsIndicators: false) {
+//                        if #available(iOS 15.0, *) {
+                            VStack(spacing: 15) {
+                                ForEach(self.movies) { movie in
+                                    MovieCardView1(movie)
+                                        .onTapGesture {
+                                            withAnimation(.interactiveSpring(response: 0.6, dampingFraction: 0.7, blendDuration: 0.7)) {
+                                                selectedMovie = movie
+                                                showDetailView = true
+                                            }
+                                        }
+                                }
                             }
-                        }
-                        .padding(.horizontal, 15)
-                        .padding(.vertical, 15)
-                        .padding(.bottom, bottomPadding(size))
-                        .background {
-                            ScrollviewDetector(carouselMode: $carouselMode, totalCardCount: self.movies.count)
-                        }
-                    } else {
-                        // Fallback on earlier versions
+                            .padding(.horizontal, 15)
+                            .padding(.vertical, 15)
+                            .padding(.bottom, bottomPadding(size))
+                            .background {
+                                ScrollviewDetector(carouselMode: $carouselMode, totalCardCount: self.movies.count)
+                            }
+//                        } else {
+//                            // Fallback on earlier versions
+//                        }
                     }
+                    .coordinateSpace(name: "SCROLLVIEW")
                 }
-                .coordinateSpace(name: "SCROLLVIEW")
+                .padding(.top, 15)
             }
-            .padding(.top, 15)
-        }
-        .overlay {
-            if let selectedMovie, showDetailView {
-                DetailView(show: $showDetailView, animation: animation, movie: selectedMovie)
+            .overlay {
+                if let selectedMovie = selectedMovie, showDetailView {
+                    DetailView(show: $showDetailView, animation: animation, movie: selectedMovie)
+                }
             }
+        } else {
+            // Fallback on earlier versions
         }
     }
     
