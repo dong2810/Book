@@ -25,7 +25,7 @@ struct HomeBook: View {
     var body: some View {
         VStack(spacing: 15) {
             HStack {
-                Text("Home")
+                Text("Home123")
                     .font(.largeTitle.bold())
                 
                 Text("Recommend")
@@ -57,7 +57,7 @@ struct HomeBook: View {
                             ForEach(self.movies) { movie in
                                 MovieCardView1(movie)
                                     .onTapGesture {
-                                        withAnimation(.spring(response: 0.6, dampingFraction: 0.7, blendDuration: 0.7))
+//                                        withAnimation(.spring(response: 0.6, dampingFraction: 0.7, blendDuration: 0.7))
                                     }
                             }
                         }
