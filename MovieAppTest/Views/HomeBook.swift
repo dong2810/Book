@@ -15,8 +15,9 @@ struct HomeBook: View {
     let movie: Movie
     @State private var showDetailView: Bool = false
     @State private var selectedMovie: Movie?
+	@State private var animateCurrentMovie: Bool = false
     
-    @ObservedObject var imageLoader = ImageLoader()
+	let imageLoader = ImageLoader()
     @ObservedObject private var nowPlayingState = MovieListState()
     @ObservedObject private var upcomingState = MovieListState()
     @ObservedObject private var topRatedState = MovieListState()
@@ -26,7 +27,7 @@ struct HomeBook: View {
         if #available(iOS 15.0, *) {
             VStack(spacing: 15) {
                 HStack {
-                    Text("Home123")
+                    Text("Home")
                         .font(.largeTitle.bold())
                     
                     Text("Recommend")
@@ -53,14 +54,19 @@ struct HomeBook: View {
                     let size = $0.size
                     
                     ScrollView(.vertical, showsIndicators: false) {
-//                        if #available(iOS 15.0, *) {
                             VStack(spacing: 15) {
                                 ForEach(self.movies) { movie in
                                     MovieCardView1(movie)
                                         .onTapGesture {
-                                            withAnimation(.interactiveSpring(response: 0.6, dampingFraction: 0.7, blendDuration: 0.7)) {
-                                                selectedMovie = movie
-                                                showDetailView = true
+											withAnimation(.easeInOut(duration: 0.2)) {
+												animateCurrentMovie = true
+												selectedMovie = movie
+											}
+											DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+												withAnimation(.interactiveSpring(response: 0.6, dampingFraction: 0.7, blendDuration: 0.7)) {
+
+													showDetailView = true
+											}
                                             }
                                         }
                                 }
@@ -71,9 +77,6 @@ struct HomeBook: View {
                             .background {
                                 ScrollviewDetector(carouselMode: $carouselMode, totalCardCount: self.movies.count)
                             }
-//                        } else {
-//                            // Fallback on earlier versions
-//                        }
                     }
                     .coordinateSpace(name: "SCROLLVIEW")
                 }
@@ -82,8 +85,16 @@ struct HomeBook: View {
             .overlay {
                 if let selectedMovie = selectedMovie, showDetailView {
                     DetailView(show: $showDetailView, animation: animation, movie: selectedMovie)
+						.transition(.asymmetric(insertion: .identity, removal: .offset(y: 5)))
                 }
             }
+			.onChange(of: showDetailView) { newValue in
+				if !newValue {
+					withAnimation(.easeInOut(duration: 0.15).delay(0.3)) {
+						animateCurrentMovie = false
+					}
+				}
+			}
         } else {
             // Fallback on earlier versions
         }
@@ -113,7 +124,7 @@ struct HomeBook: View {
                             Text(crew.name)
                         }
                         
-                        ratingText
+                        ratingText(movie)
                     }
                     .frame(width: size.width / 2, height: size.height * 0.8)
                     .background {
@@ -123,17 +134,21 @@ struct HomeBook: View {
                             .shadow(color: .black.opacity(0.08), radius: 8, x: -5, y: -5)
                     }
                     .zIndex(1)
+					.offset(x: animateCurrentMovie && selectedMovie?.id == movie.id ? -20 : 0)
                 } else {
                     // Fallback on earlier versions
                 }
                 ZStack {
-                    Image(uiImage: imageLoader.image ?? UIImage())
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: size.width / 2, height: size.height)
-                        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                        .shadow(color: .black.opacity(0.08), radius: 8, x: 5, y: 5)
-                        .shadow(color: .black.opacity(0.08), radius: 8, x: -5, y: -5)
+					if !(showDetailView && selectedMovie?.id == movie.id) {
+						LoadImage(movie: movie)
+//							.resizable()
+//							.aspectRatio(contentMode: .fill)
+							.frame(width: size.width / 2, height: size.height)
+							.clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+							.matchedGeometryEffect(id: movie.id, in: animation)
+							.shadow(color: .black.opacity(0.1), radius: 5, x: 5, y: 5)
+							.shadow(color: .black.opacity(0.1), radius: 5, x: -5, y: -5)
+					}
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .onAppear {
@@ -188,8 +203,9 @@ struct HomeBook: View {
             .padding(.horizontal, 15)
         }
     }
-    
-    var ratingText: some View {
+
+	@ViewBuilder
+	func ratingText(_ movie: Movie) -> some View {
         HStack {
             if !movie.ratingText.isEmpty {
                 Text(movie.ratingText).foregroundColor(.yellow)

@@ -12,7 +12,7 @@ struct ScrollviewDetector: UIViewRepresentable {
     var totalCardCount: Int = 0
     
     func makeCoordinator() -> Coordinator {
-        return Coordinator(parent: self, totalCount: 0)
+        return Coordinator(parent: self, totalCount: totalCardCount)
     }
     
     func makeUIView(context: Context) -> some UIView {
