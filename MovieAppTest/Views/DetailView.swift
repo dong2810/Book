@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DetailView: View {
     @Binding var show: Bool
+//    let movieId: Int
     var animation: Namespace.ID
     var movie: Movie
     let imageLoader = ImageLoader()
@@ -42,6 +43,16 @@ struct DetailView: View {
 						//Custom Corner Shape
 							.clipShape(CustomCorner(corner: [.topRight, .bottomRight], radius: 20))
 							.matchedGeometryEffect(id: movie.id, in: animation)
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(movie.title)
+                                .font(.title)
+                                .fontWeight(.semibold)
+                            
+                            ForEach(movie.directors ?? [MovieCrew]()) { crew in
+                                Text(crew.name)
+                            }
+                        }
                     }
                 }
 				.frame(height: 220)
