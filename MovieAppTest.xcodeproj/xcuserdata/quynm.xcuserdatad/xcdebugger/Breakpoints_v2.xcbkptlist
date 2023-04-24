@@ -7,32 +7,64 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A5BD841D-AAFC-4BFA-BD1B-84E0C0942E23"
+            uuid = "33A574D4-BB5C-4D96-9746-C43B8F127E74"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "MovieAppTest/Views/HomeBook.swift"
+            filePath = "MovieAppTest/Services/MovieStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "125"
-            endingLineNumber = "125"
-            landmarkName = "MovieCardView1(_:_:)"
+            startingLineNumber = "69"
+            endingLineNumber = "69"
+            landmarkName = "loadURLAndDecode(url:params:completion:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "D2A75FD7-D399-4EFD-B834-238E1B78C7DF"
+            uuid = "A33CB96D-1A69-40B3-863E-79F228F6354A"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "MovieAppTest/Views/HomeBook.swift"
+            filePath = "MovieAppTest/Services/MovieStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "120"
-            endingLineNumber = "120"
-            landmarkName = "MovieCardView1(_:_:)"
+            startingLineNumber = "64"
+            endingLineNumber = "64"
+            landmarkName = "loadURLAndDecode(url:params:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "39E8E9CF-3BE2-4C73-8DB1-3856053E5CCD"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MovieAppTest/Services/MovieStore.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "70"
+            endingLineNumber = "70"
+            landmarkName = "loadURLAndDecode(url:params:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F8DD61B9-87AD-4BBE-B93E-B99AE6FAF897"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MovieAppTest/Services/MovieStore.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "92"
+            endingLineNumber = "92"
+            landmarkName = "loadURLAndDecode(url:params:completion:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

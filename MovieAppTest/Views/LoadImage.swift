@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LoadImage: View {
 	let movie: Movie
-	@ObservedObject var imageLoader = ImageLoader()
+    @StateObject var imageLoader = ImageLoader()
 	
     var body: some View {
 		ZStack {

@@ -19,11 +19,11 @@ struct HomeBook: View {
     @State private var animateCurrentMovie: Bool = false
     
     let imageLoader = ImageLoader()
-    @ObservedObject private var nowPlayingState = MovieListState()
-    @ObservedObject private var upcomingState = MovieListState()
-    @ObservedObject private var topRatedState = MovieListState()
-    @ObservedObject private var popularState = MovieListState()
-    @ObservedObject private var movieDetailState = MovieDetailState()
+    @StateObject private var nowPlayingState = MovieListState()
+    @StateObject private var upcomingState = MovieListState()
+    @StateObject private var topRatedState = MovieListState()
+    @StateObject private var popularState = MovieListState()
+    @StateObject private var movieDetailState = MovieDetailState()
     
     var body: some View {
         if #available(iOS 15.0, *) {
