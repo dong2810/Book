@@ -57,8 +57,9 @@ struct HomeBook: View {
                     
                     ScrollView(.vertical, showsIndicators: false) {
                         VStack(spacing: 35) {
-                            ForEach(self.movies) { movie in
-                                MovieCardView1(movie, imageLoader)
+//                            ForEach(self.movies) { movie in
+                            if nowPlayingState.movies != nil {
+                            MovieCardView1(nowPlayingState.movies ?? [Movie]())
                                     .onTapGesture {
                                         withAnimation(.easeInOut(duration: 0.2)) {
                                             animateCurrentMovie = true
@@ -70,6 +71,12 @@ struct HomeBook: View {
                                             }
                                         }
                                     }
+//                            }
+                            }
+                            else {
+                                LoadingView(isLoading: self.nowPlayingState.isLoading, error: self.nowPlayingState.error) {
+                                    self.nowPlayingState.loadMovies(with: .nowPlaying)
+                                }
                             }
                         }
                         .padding(.horizontal, 15)
@@ -79,6 +86,12 @@ struct HomeBook: View {
                             ScrollviewDetector(carouselMode: $carouselMode, totalCardCount: self.movies.count)
                         }
                     }
+                    .onAppear(perform: {
+                        self.nowPlayingState.loadMovies(with: .nowPlaying)
+//                        self.upcomingState.loadMovies(with: .upcoming)
+//                        self.topRatedState.loadMovies(with: .topRated)
+//                        self.popularState.loadMovies(with: .popular)
+                    })
                     .coordinateSpace(name: "SCROLLVIEW")
                 }
                 .padding(.top, 15)
@@ -109,53 +122,57 @@ struct HomeBook: View {
     }
     
     @ViewBuilder
-    func MovieCardView1(_ movie: Movie, _ imageLoader: ImageLoader) -> some View {
+    func MovieCardView1(_ movies: [Movie]) -> some View {
+        
         GeometryReader {
             let size = $0.size
             let rect = $0.frame(in: .named("SCROLLVIEW"))
             
-            HStack(spacing: -25) {
-                if #available(iOS 15.0, *) {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text(movie.title)
-                            .font(.title3)
-                            .fontWeight(.semibold)
-                        
-                        ForEach(movie.directors ?? [MovieCrew]()) { crew in
-                            Text(crew.name)
+                HStack(spacing: -25) {
+                    ForEach(self.movies) { movie in
+                    if #available(iOS 15.0, *) {
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text(movie.title)
+                                .font(.title3)
+                                .fontWeight(.semibold)
+                            
+                            ForEach(movie.directors ?? [MovieCrew]()) { crew in
+                                Text(crew.name)
+                            }
+                            
+                            ratingText(movie)
                         }
-                        
-                        ratingText(movie)
+                        .frame(width: size.width / 2, height: size.height * 0.8)
+                        .background {
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                .fill(.white)
+                                .shadow(color: .black.opacity(0.08), radius: 8, x: 5, y: 5)
+                                .shadow(color: .black.opacity(0.08), radius: 8, x: -5, y: -5)
+                        }
+                        .zIndex(1)
+                        .offset(x: animateCurrentMovie && selectedMovie?.id == movie.id ? -20 : 0)
+                    } else {
+                        // Fallback on earlier versions
                     }
-                    .frame(width: size.width / 2, height: size.height * 0.8)
-                    .background {
-                        RoundedRectangle(cornerRadius: 10, style: .continuous)
-                            .fill(.white)
-                            .shadow(color: .black.opacity(0.08), radius: 8, x: 5, y: 5)
-                            .shadow(color: .black.opacity(0.08), radius: 8, x: -5, y: -5)
+                    ZStack {
+                        if !(showDetailView && selectedMovie?.id == movie.id) {
+                            LoadImage(movie: movie)
+                                .frame(width: size.width / 2, height: size.height)
+                                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                                .matchedGeometryEffect(id: movie.id, in: animation)
+//                                .shadow(color: .black.opacity(0.1), radius: 5, x: 5, y: 5)
+//                                .shadow(color: .black.opacity(0.1), radius: 5, x: -5, y: -5)
+                        }
                     }
-                    .zIndex(1)
-                    .offset(x: animateCurrentMovie && selectedMovie?.id == movie.id ? -20 : 0)
-                } else {
-                    // Fallback on earlier versions
-                }
-                ZStack {
-                    if !(showDetailView && selectedMovie?.id == movie.id) {
-                        LoadImage(movie: movie)
-                            .frame(width: size.width / 2, height: size.height)
-                            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                            .matchedGeometryEffect(id: movie.id, in: animation)
-                            .shadow(color: .black.opacity(0.1), radius: 5, x: 5, y: 5)
-                            .shadow(color: .black.opacity(0.1), radius: 5, x: -5, y: -5)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                    .onAppear {
+//                        self.imageLoader.loadImage(with: self.movie.backdropURL)
+//                    }
                     }
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .onAppear {
-                    self.imageLoader.loadImage(with: self.movie.backdropURL)
-                }
-            }
-            .frame(width: size.width)
-            .rotation3DEffect(.init(degrees: convertOffsetToRotation(rect)), axis: (x: 1, y: 0, z: 0), anchor: .bottom, anchorZ: 1, perspective: 0.8)
+                .frame(width: size.width)
+                .rotation3DEffect(.init(degrees: convertOffsetToRotation(rect)), axis: (x: 1, y: 0, z: 0), anchor: .bottom, anchorZ: 1, perspective: 0.8)
+            
         }
         .frame(height: 220)
     }
