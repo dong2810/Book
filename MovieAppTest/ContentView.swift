@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        HomeBook(movies: Movie.stubbedMovies, movie: Movie.stubbedMovie)
+        HomeBook()
     }
 }
 
