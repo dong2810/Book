@@ -43,7 +43,7 @@ struct MovieCardView: View {
 								.shadow(color: .black.opacity(0.08), radius: 8, x: -5, y: -5)
 						}
 						.zIndex(1)
-//						.offset(x: -20)
+//						.offset(x: CGFloat(offsetCheck))
 
 						if !(showDetailView && selectedMovie?.id == movie.id) {
 							LoadImage(movie: movie)
@@ -70,11 +70,8 @@ struct MovieCardView: View {
 					}
 				}
 			}
-			//			.background {
-			//				ScrollviewDetector(carouselMode: $carouselMode, totalCardCount: self.movies.count)
-			//			}
 			.overlay {
-				if let selectedMovie = selectedMovie, showDetailView {
+				if let selectedMovie, showDetailView {
 					DetailView(show: $showDetailView, animation: animation, movie: selectedMovie)
 						.transition(.asymmetric(insertion: .identity, removal: .offset(y: 5)))
 				}

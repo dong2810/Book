@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct ContentView: View {
+	@StateObject private var nowPlayingState = MovieListState()
+
     var body: some View {
-        HomeBook()
+		HomeBook()
     }
 }
 
